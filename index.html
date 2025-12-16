@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avisos Kiosk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #00BCD4;
+            text-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        .header .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .messages-container {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 2px solid rgba(0, 188, 212, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .message-card:hover {
+            border-color: #00BCD4;
+            box-shadow: 0 12px 48px rgba(0, 188, 212, 0.3);
+        }
+
+        .message-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #00BCD4, #0097A7);
+            color: #ffffff;
+            font-weight: bold;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+        }
+
+        .message-content {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            color: #ffffff;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .no-messages {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .no-messages-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .no-messages-text {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        .no-messages-hint {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-style: italic;
+        }
+
+
+
+        /* Responsive para tablets menores */
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .header .icon {
+                font-size: 2.5rem;
+            }
+
+            .message-card {
+                padding: 2rem;
+            }
+
+            .message-content {
+                font-size: 1.5rem;
+            }
+
+            .no-messages-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">⚠️</div>
+            <h1>AVISO</h1>
+        </div>
+
+        <div class="messages-container" id="messagesContainer">
+            <!-- As mensagens serão inseridas aqui via JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        function loadMessages() {
+            const container = document.getElementById('messagesContainer');
+            const messages = [];
+
+            // Buscar todas as chaves do localStorage que começam com "message" seguido de número
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                
+                // Verificar se a chave corresponde ao padrão messageN (onde N é um número)
+                if (key && /^message\d+$/.test(key)) {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        // Extrair o número da chave (message1 -> 1, message2 -> 2, etc)
+                        const number = key.match(/\d+/)[0];
+                        messages.push({
+                            key: key,
+                            number: parseInt(number),
+                            content: value
+                        });
+                    }
+                }
+            }
+
+            // Ordenar mensagens pelo número
+            messages.sort((a, b) => a.number - b.number);
+
+            // Limpar container
+            container.innerHTML = '';
+
+            // Se não houver mensagens, mostrar estado vazio
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div class="no-messages">
+                        <div class="no-messages-icon">📭</div>
+                        <div class="no-messages-text">Nenhum aviso no momento</div>
+                        <div class="no-messages-hint">
+                            Para adicionar avisos, defina itens no localStorage com chaves como:<br>
+                            message1, message2, message3, etc.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Criar cards de mensagem
+            messages.forEach(msg => {
+                const card = document.createElement('div');
+                card.className = 'message-card';
+                card.innerHTML = `
+                    <div class="message-number">Mensagem #${msg.number}</div>
+                    <div class="message-content">${escapeHtml(msg.content)}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Função para escapar HTML e prevenir XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Carregar mensagens ao iniciar
+        loadMessages();
+
+        // Recarregar mensagens quando o localStorage mudar (em outra aba/janela)
+        window.addEventListener('storage', loadMessages);
+
+        // Recarregar mensagens periodicamente (caso sejam adicionadas via console)
+        setInterval(loadMessages, 5000);
+    </script>
+</body>
+</html>

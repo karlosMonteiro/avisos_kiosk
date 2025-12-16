@@ -1,0 +1,123 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.header h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #00BCD4;
+  text-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.messages-container {
+  display: grid;
+  gap: 2rem;
+  will-change: contents;
+  transition: none !important;
+  animation: none !important;
+}
+
+.message-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  border: 2px solid rgba(0, 188, 212, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.message-card:hover {
+  border-color: #00BCD4;
+  box-shadow: 0 12px 48px rgba(0, 188, 212, 0.3);
+}
+
+.message-number {
+  display: inline-block;
+  background: linear-gradient(135deg, #00BCD4, #0097A7);
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+}
+
+.message-content {
+  font-size: 1.8rem;
+  line-height: 1.6;
+  color: #ffffff;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.no-messages {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.no-messages-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.no-messages-text {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1rem;
+}
+
+.no-messages-hint {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* Responsive para tablets menores */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .header h1 {
+    font-size: 3rem;
+  }
+
+  .header .icon {
+    font-size: 2.5rem;
+  }
+
+  .message-card {
+    padding: 2rem;
+  }
+
+  .message-content {
+    font-size: 1.5rem;
+  }
+
+  .no-messages-text {
+    font-size: 1.5rem;
+  }
+}
